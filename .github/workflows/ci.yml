@@ -1,8 +1,12 @@
+#on:
+#  push:
+#    branches:
+#      - '**'        # matches every branch
+#      - '!main'   # excludes main
 on:
   push:
     branches:
-      - '**'        # matches every branch
-      - '!main'   # excludes main
+      - main
 jobs:
   build_and_package:
     name: Build And Package

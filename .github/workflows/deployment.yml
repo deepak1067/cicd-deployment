@@ -1,61 +1,61 @@
-#name: Build and Deploy to GKE
-#
-#on:
-#  push:
-#    branches:
-#      - main
-#
-## Environment variables available to all jobs and steps in this workflow
-#env:
-#  PROJECT_ID: ${{ secrets.PROJECT_ID }}
-#
-#
-#jobs:
-#  setup-build-deploy:
-#    name: Setup, Build, and Deploy
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - run: mvn clean install
-#      - name: Upload Artifacts
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: GKE-deployment-0.0.1-SNAPSHOT.jar
-#          path: target/
-#  build-docker-image:
-#    name: build-docker
-#    needs: setup-build-deploy
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: checkout
-#        uses: actions/checkout@v2
-#      - name: Retrieve saved jar
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: GKE-deployment-0.0.1-SNAPSHOT.jar
-#          path: target/
-#      - id: 'auth'
-#        uses: 'google-github-actions/auth@v1'
-#        with:
-#          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
-#
-#      - name: 'Set up Cloud SDK'
-#        uses: 'google-github-actions/setup-gcloud@v1'
-#
-#      - name: 'Use gcloud CLI'
-#        run: |
-#          gcloud auth configure-docker
-#      # Build the Docker image
-#      - name: Build
-#        run: |
-#          docker build -t gke-deployment-ci-cd .
-#      # Tag the Docker image
-#      - name: Tag
-#        run: |
-#          docker tag gke-deployment-ci-cd gcr.io/$PROJECT_ID/gke-deployment-ci-cd
-#
-#      # Push the Docker image to Google Container Registry
-#      - name: Publish
-#        run: |
-#          docker push gcr.io/sdk-deployment-new/gke-deployment-ci-cd
-#            # Push the Docker image to Google Container Registry
+name: Build and Deploy to GKE
+
+on:
+  push:
+    branches:
+      - main
+
+# Environment variables available to all jobs and steps in this workflow
+env:
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+
+
+jobs:
+  setup-build-deploy:
+    name: Setup, Build, and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: mvn clean install
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: GKE-deployment-0.0.1-SNAPSHOT.jar
+          path: target/
+  build-docker-image:
+    name: build-docker
+    needs: setup-build-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Retrieve saved jar
+        uses: actions/download-artifact@v2
+        with:
+          name: GKE-deployment-0.0.1-SNAPSHOT.jar
+          path: target/
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: 'Use gcloud CLI'
+        run: |
+          gcloud auth configure-docker
+      # Build the Docker image
+      - name: Build
+        run: |
+          docker build -t gke-deployment-ci-cd .
+      # Tag the Docker image
+      - name: Tag
+        run: |
+          docker tag gke-deployment-ci-cd gcr.io/$PROJECT_ID/gke-deployment-ci-cd
+
+      # Push the Docker image to Google Container Registry
+      - name: Publish
+        run: |
+          docker push gcr.io/sdk-deployment-new/gke-deployment-ci-cd
+            # Push the Docker image to Google Container Registry
