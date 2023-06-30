@@ -75,17 +75,17 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIAL }}'
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
-      - name: 'Configure gcloud with Service Account Key'
-        run: |
-          echo $GOOGLE_APPLICATION_CREDENTIAL | base64 --decode > $HOME/gcloud-service-key.json
-          gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
+#      - name: 'Configure gcloud with Service Account Key'
+#        run: |
+#          echo $GOOGLE_APPLICATION_CREDENTIAL | base64 --decode > $HOME/gcloud-service-key.json
+#          gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
       - name: 'Use gcloud CLI'
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone asia-southeast1-a --project $PROJECT_ID
