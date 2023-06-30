@@ -86,16 +86,16 @@ jobs:
           gcloud config set container/cluster $GKE_CLUSTER
       - name: 'run deployment'
         run: |
-          kubectl run gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd --port 8081
-          kubectl run gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd --port=8080 --host=<api-server-host> --port=<api-server-port>
+          kubectl run gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd
+#          kubectl run gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd --port=8080 --host=<api-server-host> --port=<api-server-port>
 
       - name: 'create deployment'
         run: |
-          kubectl create deployment gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd --port 8081      
+          kubectl create deployment gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd     
 
       - name: 'expose deployment'
         run: |
-          kubectl expose deployment gke-deployment-ci-cd --type=LoadBalancer --port 81 --target-port 8080
+          kubectl expose deployment gke-deployment-ci-cd --type=LoadBalancer --port 80 --target-port 8080
           
 
 #        - name: 'Set up Cloud SDK'
