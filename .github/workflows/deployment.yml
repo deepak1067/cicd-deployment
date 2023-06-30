@@ -73,15 +73,24 @@ jobs:
     needs: build-docker-image
     runs-on: ubuntu-latest
     steps:
-        - uses: 'google-github-actions/auth@v1'
-        - name: kubectl - Google Cloud GKE cluster.
-          uses: 'google-github-actions/setup-gcloud@v1'
-          env:
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+#      - name: 'Set up Cloud SDK'
+#        - uses: 'google-github-actions/auth@v1'
+#        - name: kubectl - Google Cloud GKE cluster.
+#          uses: 'google-github-actions/setup-gcloud@v1'
+        env:
             PROJECT_ID: ${{ env.PROJECT_ID }}
             APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
             CLUSTER_NAME: ${{ env.GKE_CLUSTER }}
             ZONE_NAME: ${{ env.GKE_ZONE }}
-          with:
+        with:
             args: apply -f k8s/
 #    needs: build-docker-image
 #
