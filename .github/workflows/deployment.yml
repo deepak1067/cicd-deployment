@@ -8,6 +8,8 @@ on:
 # Environment variables available to all jobs and steps in this workflow
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  GKE_CLUSTER: deployment-cluster-sdk
+  GKE_NAMESPACE: demo-application
 
 
 jobs:
@@ -64,3 +66,38 @@ jobs:
         run: |
           docker push gcr.io/my-kubernetes-project-389604/gke-deployment-ci-cd
             # Push the Docker image to Google Container Registry
+
+  deploy-to-gke:
+    name: Deploy to GKE
+    needs: build-docker-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+      - name: 'Use gcloud CLI'
+        run: |
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone asia-southeast1-a --project $PROJECT_ID
+          |
+          cat <<EOF | kubectl apply -f -
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: gke-deployment-ci-cd
+            labels:
+              app: gke-deployment-ci-cd
+          spec:
+            replicas: 2
+            selector:
+              matchLabels:
+                app: gke-deployment-ci-cd
+            template:
+              metadata:
+                labels:
+                  app: gke-deployment-ci-cd
+              spec:
+                containers:
+                  - name: gke-deployment-ci-cd
+                    image: gcr.io/$PROJECT_ID/gke-deployment-ci-cd
+                    ports:
+                      - containerPort: 8080
+          EOF
