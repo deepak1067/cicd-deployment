@@ -81,17 +81,32 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
 
-#      - name: 'Set up Cloud SDK'
+      - name: 'Use gcloud CLI'
+        run: |
+          gcloud config set container/cluster $GKE_CLUSTER
+      - name: 'run deployment'
+        run: |
+          kubectl run gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd --port 8080
+      - name: 'create deployment'
+        run: |
+          kubectl create deployment gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd --port 8080        
+
+      - name: 'expose deployment'
+        run: |
+          kubectl expose deployment gke-deployment-ci-cd --type=LoadBalancer --port 80 --target-port 8080
+          
+
+#        - name: 'Set up Cloud SDK'
 #        - uses: 'google-github-actions/auth@v1'
 #        - name: kubectl - Google Cloud GKE cluster.
 #          uses: 'google-github-actions/setup-gcloud@v1'
-        env:
-            PROJECT_ID: ${{ env.PROJECT_ID }}
-            APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-            CLUSTER_NAME: ${{ env.GKE_CLUSTER }}
-            ZONE_NAME: ${{ env.GKE_ZONE }}
-        with:
-            args: apply -f k8s/
+#        env:
+#            PROJECT_ID: ${{ env.PROJECT_ID }}
+#            APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+#            CLUSTER_NAME: ${{ env.GKE_CLUSTER }}
+#            ZONE_NAME: ${{ env.GKE_ZONE }}
+#        with:
+#            args: apply -f k8s/
 #    needs: build-docker-image
 #
 #    runs-on: ubuntu-latest
