@@ -88,7 +88,9 @@ jobs:
 #          gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
       - name: 'Use gcloud CLI'
         run: |
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone asia-southeast1-a --project $PROJECT_ID
+          gcloud config set project $PROJECT_ID
+          gcloud config set compute/zone asia-southeast1-a
+          gcloud container clusters get-credentials $GKE_CLUSTER
       - name: 'Apply Kubernetes Deployment'
         run: |
           echo "apiVersion: apps/v1
