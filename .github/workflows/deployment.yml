@@ -89,27 +89,26 @@ jobs:
       - name: 'Use gcloud CLI'
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone asia-southeast1-a --project $PROJECT_ID
-          |
-          cat <<EOF | kubectl apply -f -
-          apiVersion: apps/v1
+      - name: 'Apply Kubernetes Deployment'
+        run: |
+          echo "apiVersion: apps/v1
           kind: Deployment
           metadata:
             name: gke-deployment-ci-cd
             labels:
               app: gke-deployment-ci-cd
           spec:
-            replicas: 2
+            replicas: 3
             selector:
               matchLabels:
                 app: gke-deployment-ci-cd
             template:
               metadata:
-                labels:
-                  app: gke-deployment-ci-cd
+               labels:
+                 app: gke-deployment-ci-cd
               spec:
                 containers:
                   - name: gke-deployment-ci-cd
-                    image: gcr.io/$PROJECT_ID/gke-deployment-ci-cd
-                    ports:
-                      - containerPort: 8080
-          EOF
+                   image: gcr.io/$PROJECT_ID/gke-deployment-ci-cd
+                   ports:
+                     - containerPort: 8080" | kubectl apply -f -
