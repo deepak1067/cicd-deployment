@@ -73,9 +73,9 @@ jobs:
     needs: build-docker-image
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@master
+        - uses: 'google-github-actions/auth@v1'
         - name: kubectl - Google Cloud GKE cluster.
-          uses: ameydev/gke-kubectl-action@master
+          uses: 'google-github-actions/setup-gcloud@v1'
           env:
             PROJECT_ID: ${{ env.PROJECT_ID }}
             APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
