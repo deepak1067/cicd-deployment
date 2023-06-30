@@ -74,6 +74,8 @@ jobs:
     steps:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
+      - name: 'Authenticate with gcloud'
+        run: gcloud auth login
       - name: 'Use gcloud CLI'
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone asia-southeast1-a --project $PROJECT_ID
