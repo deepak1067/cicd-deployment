@@ -84,7 +84,7 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v1'
       - name: 'Configure gcloud with Service Account Key'
         run: |
-          echo $GOOGLE_APPLICATION_CREDENTIALS | base64 --decode > $HOME/gcloud-service-key.json
+          echo $GOOGLE_APPLICATION_CREDENTIAL | base64 --decode > $HOME/gcloud-service-key.json
           gcloud auth activate-service-account --key-file=$HOME/gcloud-service-key.json
       - name: 'Use gcloud CLI'
         run: |
