@@ -73,30 +73,44 @@ jobs:
     needs: build-docker-image
     runs-on: ubuntu-latest
     steps:
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v1'
+      - uses: actions/checkout@master
+      - name: kubectl - Google Cloud GKE cluster.
+        uses: ameydev/gke-kubectl-action@master
+        env:
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
+          ZONE_NAME: us-central1-c
         with:
-          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+          args: apply -f k8s/
 
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
 
-      - name: 'Use gcloud CLI'
-        run: |
-          gcloud config set container/cluster $GKE_CLUSTER
-      - name: 'run deployment'
-        run: |
-          kubectl run gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd
-#          kubectl run gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd --port=8080 --host=<api-server-host> --port=<api-server-port>
+#    steps:
+#      - id: 'auth'
+#        uses: 'google-github-actions/auth@v1'
+#        with:
+#          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+#
+#      - name: 'Set up Cloud SDK'
+#        uses: 'google-github-actions/setup-gcloud@v1'
+#
+#      - name: 'Use gcloud CLI'
+#        run: |
+#          gcloud config set container/cluster $GKE_CLUSTER
+#      - name: 'run deployment'
+#        run: |
+#          kubectl run gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd
+##          kubectl run gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd --port=8080 --host=<api-server-host> --port=<api-server-port>
+#
+#      - name: 'create deployment'
+#        run: |
+#          kubectl create deployment gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd
+#
+#      - name: 'expose deployment'
+#        run: |
+#          kubectl expose deployment gke-deployment-ci-cd --type=LoadBalancer --port 80 --target-port 8080
 
-      - name: 'create deployment'
-        run: |
-          kubectl create deployment gke-deployment-ci-cd --image=gcr.io/$PROJECT_ID/gke-deployment-ci-cd     
-
-      - name: 'expose deployment'
-        run: |
-          kubectl expose deployment gke-deployment-ci-cd --type=LoadBalancer --port 80 --target-port 8080
-          
+#          -----------------------------------------------------
 
 #        - name: 'Set up Cloud SDK'
 #        - uses: 'google-github-actions/auth@v1'
