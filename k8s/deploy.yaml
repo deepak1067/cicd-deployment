@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-application-java-19
+  name: demo-application-java-19-new
   labels:
-    app: demo-application2
+    app: demo-application-java-19-new
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: demo-application-java-19
+      app: demo-application-java-19-new
   template:
     metadata:
       labels:
-        app: demo-application-java-19
+        app: demo-application-java-19-new
     spec:
       containers:
-        - name: demo-application-java-19
+        - name: demo-application-java-19-new
           image: gcr.io/my-kubernetes-project-389604/gke-deployment-ci-cd
           ports:
             - containerPort: 8080
