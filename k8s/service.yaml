@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: demo-application-service-java-19-new
+  name: hello-application-service-java-19
 spec:
   selector:
-    app: demo-application-java-19-new
+    app: hello-application-java-19
   type: LoadBalancer
   ports:
     - protocol: TCP
