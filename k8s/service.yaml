@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: demo-application-service
+  name: demo-application-service-java-19
 spec:
   selector:
     app: demo-application2
